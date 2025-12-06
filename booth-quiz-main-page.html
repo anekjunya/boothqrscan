@@ -154,7 +154,7 @@
     <div class="booths" id="booths-container"></div>
 
     <div class="progress" id="progress">
-      ความคืบหน้า: <span id="progress-count">0</span>/16
+      ความคืบหน้า: <span id="progress-count">0</span>/<span id="progress-total">0</span>
     </div>
 
     <button class="reward-btn" id="reward-btn">แสดงหน้าจอเพื่อรับของสมนาคุณ</button>
@@ -166,31 +166,46 @@
 
   <script>
     const booths = [
-            { id: 1, name: 'S1', logo: 'logo/cmru.PNG' },
-            { id: 2, name: 'S2', logo: 'logo/cmru.PNG' },
-            { id: 3, name: 'G1', logo: 'logo/cmru.PNG' },
-            { id: 4, name: 'G2', logo: 'logo/cmru.PNG' },
-            { id: 5, name: 'G3', logo: 'logo/cmru.PNG' },
-            { id: 6, name: 'G4', logo: 'logo/cmru.PNG' },
-            { id: 7, name: 'G5', logo: 'logo/cmru.PNG' },
-            { id: 8, name: 'G6', logo: 'logo/cmru.PNG' },
-            { id: 9, name: 'G7', logo: 'logo/cmru.PNG' },
-            { id: 10, name: 'G8', logo: 'logo/cmru.PNG' },
-            { id: 11, name: 'P1', logo: 'logo/cmru.PNG' },
-            { id: 12, name: 'P2', logo: 'logo/cmru.PNG' },
-            { id: 13, name: 'P3', logo: 'logo/cmru.PNG' },
-            { id: 14, name: 'P4', logo: 'logo/cmru.PNG' },
-            { id: 15, name: 'P5', logo: 'logo/cmru.PNG' },
-            { id: 16, name: 'P6', logo: 'logo/cmru.PNG' } 
+      { id: 1, name: 'S1', logo: 'logo/cmru.PNG' },
+      { id: 2, name: 'S2', logo: 'logo/cmru.PNG' },
+      { id: 3, name: 'G1', logo: 'logo/cmru.PNG' },
+      { id: 4, name: 'G2', logo: 'logo/cmru.PNG' },
+      { id: 5, name: 'G3', logo: 'logo/cmru.PNG' },
+      { id: 6, name: 'G4', logo: 'logo/cmru.PNG' },
+      { id: 7, name: 'G5', logo: 'logo/cmru.PNG' },
+      { id: 8, name: 'G6', logo: 'logo/cmru.PNG' },
+      { id: 9, name: 'G7', logo: 'logo/cmru.PNG' },
+      { id: 10, name: 'G8', logo: 'logo/cmru.PNG' },
+      { id: 11, name: 'P1', logo: 'logo/cmru.PNG' },
+      { id: 12, name: 'P2', logo: 'logo/cmru.PNG' },
+      { id: 13, name: 'P3', logo: 'logo/cmru.PNG' },
+      { id: 14, name: 'P4', logo: 'logo/cmru.PNG' },
+      { id: 15, name: 'P5', logo: 'logo/cmru.PNG' },
+      { id: 16, name: 'P6', logo: 'logo/cmru.PNG' }
     ];
 
-    let completedBooths = [];
-    if (localStorage.getItem('completedBooths')) {
-      completedBooths = JSON.parse(localStorage.getItem('completedBooths'));
+    // load completedBooths (sanitize: keep only ids present in booths and remove duplicates)
+    function loadCompletedBooths() {
+      let arr = [];
+      try {
+        const raw = localStorage.getItem('completedBooths');
+        if (raw) arr = JSON.parse(raw) || [];
+      } catch (e) {
+        arr = [];
+      }
+      // ensure numbers (if stored as strings) and filter to existing booth ids
+      const validIds = new Set(booths.map(b => Number(b.id)));
+      const cleaned = Array.from(new Set(arr.map(x => Number(x)).filter(x => validIds.has(x))));
+      // save cleaned back to localStorage (so old garbage is removed)
+      localStorage.setItem('completedBooths', JSON.stringify(cleaned));
+      return cleaned;
     }
+
+    let completedBooths = loadCompletedBooths();
 
     function generateBooths() {
       const boothsContainer = document.getElementById('booths-container');
+      boothsContainer.innerHTML = ''; // clear first to avoid duplicates if called again
       booths.forEach(booth => {
         const boothElement = document.createElement('div');
         boothElement.className = 'booth';
@@ -227,9 +242,13 @@
 
     function updateProgress() {
       const progressCount = document.getElementById('progress-count');
+      const progressTotal = document.getElementById('progress-total');
       progressCount.textContent = completedBooths.length;
+      progressTotal.textContent = booths.length;
       if (completedBooths.length === booths.length) {
         document.getElementById('reward-btn').style.display = 'block';
+      } else {
+        document.getElementById('reward-btn').style.display = 'none';
       }
     }
 
@@ -243,8 +262,9 @@
     });
 
     window.addEventListener('storage', (event) => {
+      // when other tabs/windows update localStorage
       if (event.key === 'completedBooths') {
-        completedBooths = JSON.parse(event.newValue);
+        completedBooths = loadCompletedBooths();
         updateBoothsDisplay();
         updateProgress();
       }
@@ -259,13 +279,18 @@
       });
     }
 
-    // Load booths
+    // 초기โหลด
     generateBooths();
 
     // Go to scanner
     document.getElementById('scan-btn').addEventListener('click', function() {
       window.location.href = 'qr-scanner-webpage.html';
     });
+
+    // OPTIONAL: helper function you can call from console to clear all stored progress:
+    // localStorage.clear();
+    // or to only clear completedBooths:
+    // localStorage.removeItem('completedBooths');
   </script>
 </body>
 </html>
