@@ -1,362 +1,76 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>คำถามประจำบู๊ธ</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
-    <style>
-        body {
-            font-family: 'Prompt', sans-serif;
-            background-color: #f0f2f5;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto; 
-            padding: 20px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-        }
-        .logo-container {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .logo {
-            height: 100px;
-            margin-bottom: 15px;
-            filter: grayscale(100%);
-        }
-        .logo.completed {
-            filter: grayscale(0%);
-        }
-        .question {
-            font-size: 18px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .answers {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .answer-btn {
-            padding: 15px;
-            background-color: #f0f2f5;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-        .answer-btn:hover {
-            background-color: #e4e6e9;
-        }
-        .back-btn {
-            display: block;
-            margin: 30px auto 0;
-            padding: 10px 20px;
-            background-color: #4267B2;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .back-btn:hover {
-            background-color: #365899;
-        }
-        .already-completed {
-            text-align: center;
-            color: #4CAF50;
-            font-size: 18px;
-            margin: 20px 0;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>รับ E-Stamp</title>
+<style>
+body { font-family: Prompt, sans-serif; background:#f0f2f5; padding:20px }
+.container {
+  max-width:600px; margin:auto; background:#fff;
+  padding:20px; border-radius:10px; text-align:center
+}
+.logo {
+  width:80px; height:80px; border-radius:50%;
+  margin:10px; background:#fff
+}
+.btn {
+  margin-top:20px; padding:12px 30px;
+  background:#4CAF50; color:#fff;
+  border:none; border-radius:6px;
+  font-size:18px; cursor:pointer
+}
+</style>
 </head>
 <body>
-    <div class="container" id="question-container">
-        <div class="logo-container">
-            <img id="booth-logo" src="" alt="Booth logo" class="logo">
-            <h1 id="booth-name"></h1>
-        </div>
-        
-        <div id="question-section">
-            <div class="question" id="question-text"></div>
-            <div class="answers" id="answers-container"></div>
-        </div>
-        
-        <div id="completed-section" style="display: none;">
-            <p class="already-completed">คุณเยี่มชมบู๊ธนี้แล้ว!</p>
-            <button class="back-btn" id="back-btn">กลับหน้าหลัก</button>
-        </div>
-        
-    </div>
 
-    <script>
-        // Questions and answers
-        const questions = [
-            {
-                id: 1,
-                boothId: 1,
-                questionText: 'ได้รับ E-Stamp 1 ดวง',
-                options: [
-                    { text: 'กลับหน้าหลัก', isCorrect: true }
-                ]
-            },
-            {
-                id: 2,
-                boothId: 2,
-                questionText: 'ได้รับ E-Stamp 1 ดวง',
-                options: [
-                    { text: 'กลับหน้าหลัก', isCorrect: true }
-                ]
-            },
-            {
-                id: 3,
-                boothId: 3,
-                questionText: 'ได้รับ E-Stamp 1 ดวง',
-                options: [
-                    { text: 'กลับหน้าหลัก', isCorrect: true }
-                ]
-            },
-            {
-                id: 4,
-                boothId: 4,
-                questionText: 'ได้รับ E-Stamp 1 ดวง',
-                options: [
-                    { text: 'กลับหน้าหลักนะ', isCorrect: true }
-                ]
-            },
-            {
-                id: 5,
-                boothId: 5,
-                questionText: 'ได้รับ E-Stamp 1 ดวง',
-                options: [
-                    { text: 'กลับหน้าหลัก', isCorrect: true }
-                ]
-            },
-            {
-                id: 6,
-                boothId: 6,
-                questionText: 'ได้รับ E-Stamp 1 ดวง',
-                options: [
-                    { text: 'กลับหน้าหลัก', isCorrect: true }
-                ]
-            },
-            {
-                id: 7,
-                boothId: 7,
-                questionText: 'ได้รับ E-Stamp 1 ดวง',
-                options: [
-                    { text: 'กลับหน้าหลัก', isCorrect: true }
-                ]
-            },
-            {
-                id: 8,
-                boothId: 8,
-                questionText: 'ได้รับ E-Stamp 1 ดวง',
-                options: [
-                    { text: 'กลับหน้าหลัก', isCorrect: true }
-                ]
-            },
-                        {
-                id: 9,
-                boothId: 9,
-                questionText: 'ได้รับ E-Stamp 1 ดวง',
-                options: [
-                    { text: 'กลับหน้าหลัก', isCorrect: true }
-                ]
-            },
-            {
-                id: 10,
-                boothId: 10,
-                questionText: 'ได้รับ E-Stamp 1 ดวง',
-                options: [
-                    { text: 'กลับหน้าหลัก', isCorrect: true }
-                ]
-            },
-            {
-                id: 11,
-                boothId: 11,
-                questionText: 'ได้รับ E-Stamp 1 ดวง',
-                options: [
-                    { text: 'กลับหน้าหลัก', isCorrect: true }
-                ]
-            },
-            {
-                id: 12,
-                boothId: 12,
-                questionText: 'ได้รับ E-Stamp 1 ดวง',
-                options: [
-                    { text: 'กลับหน้าหลักนะ', isCorrect: true }
-                ]
-            },
-            {
-                id: 13,
-                boothId: 13,
-                questionText: 'ได้รับ E-Stamp 1 ดวง',
-                options: [
-                    { text: 'กลับหน้าหลัก', isCorrect: true }
-                ]
-            },
-            {
-                id: 14,
-                boothId: 14,
-                questionText: 'ได้รับ E-Stamp 1 ดวง',
-                options: [
-                    { text: 'กลับหน้าหลัก', isCorrect: true }
-                ]
-            },
-            {
-                id: 15,
-                boothId: 15,
-                questionText: 'ได้รับ E-Stamp 1 ดวง',
-                options: [
-                    { text: 'กลับหน้าหลัก', isCorrect: true }
-                ]
-            },
-            {
-                id: 16,
-                boothId: 16,
-                questionText: 'ได้รับ E-Stamp 1 ดวง',
-                options: [
-                    { text: 'กลับหน้าหลัก', isCorrect: true }
-                ]
-            },
+<div class="container">
+  <h2>คุณได้รับ E-Stamp</h2>
+  <div id="logo-container"></div>
+  <button class="btn" id="confirm-btn">รับ E-Stamp</button>
+</div>
 
-        ];
+<script>
+const booths = [
+  {id:1,name:'S1',logo:'logo/cmru.png'},
+  {id:2,name:'S2',logo:'logo/cmru.png'},
+  {id:3,name:'G1',logo:'logo/cmru.png'},
+  {id:4,name:'G2',logo:'logo/cmru.png'},
+  {id:5,name:'G3',logo:'logo/cmru.png'},
+  {id:6,name:'G4',logo:'logo/cmru.png'}
+];
 
-        // Booth data
-        const booths = [
-            { id: 1, name: 'S1', logo: 'logo/cmru.PNG' },
-            { id: 2, name: 'S2', logo: 'logo/cmru.PNG' },
-            { id: 3, name: 'G1', logo: 'logo/cmru.PNG' },
-            { id: 4, name: 'G2', logo: 'logo/cmru.PNG' },
-            { id: 5, name: 'G3', logo: 'logo/cmru.PNG' },
-            { id: 6, name: 'G4', logo: 'logo/cmru.PNG' },
-            { id: 7, name: 'G5', logo: 'logo/cmru.PNG' },
-            { id: 8, name: 'G6', logo: 'logo/cmru.PNG' },
-            { id: 9, name: 'G7', logo: 'logo/cmru.PNG' },
-            { id: 10, name: 'G8', logo: 'logo/cmru.PNG' },
-            { id: 11, name: 'P1', logo: 'logo/cmru.PNG' },
-            { id: 12, name: 'P2', logo: 'logo/cmru.PNG' },
-            { id: 13, name: 'P3', logo: 'logo/cmru.PNG' },
-            { id: 14, name: 'P4', logo: 'logo/cmru.PNG' },
-            { id: 15, name: 'P5', logo: 'logo/cmru.PNG' },
-            { id: 16, name: 'P6', logo: 'logo/cmru.PNG' }
-            //{ id: 17, name: 'S1', logo: 'logo/cisco.png' },
-            //{ id: 18, name: 'S1', logo: 'logo/vmware.png' },
-            //{ id: 19, name: 'Microsoft', logo: 'logo/microsoft.png' },
-            //{ id: 20, name: 'Adobe', logo: 'logo/adobe.png' },
-            //{ id: 21, name: 'APC', logo: 'logo/apc.png' },
-            //{ id: 22, name: 'HPE', logo: 'logo/hpe.png' },
-            //{ id: 23, name: 'Maxhub', logo: 'logo/maxhub.png' },
-            //{ id: 24, name: 'Safetica', logo: 'logo/safetica.png' },
-            //{ id: 25, name: 'HP', logo: 'logo/hp.png' } 
-        ];
+// อ่าน booths จาก URL
+const params = new URLSearchParams(window.location.search);
+const boothIds = params.get('booths')
+  ? params.get('booths').split(',').map(Number)
+  : [];
 
-        // Get booth ID from URL parameter
-        const urlParams = new URLSearchParams(window.location.search);
-        const boothId = parseInt(urlParams.get('booth'));
-        
-        // Variables to track progress
-        let completedBooths = [];
-        
-        // Check if there's saved progress in localStorage
-        if (localStorage.getItem('completedBooths')) {
-            completedBooths = JSON.parse(localStorage.getItem('completedBooths'));
-        }
+if (boothIds.length === 0) {
+  window.location.href = 'booth-quiz-main-page.html';
+}
 
-        // Function to initialize the page
-        function initPage() {
-            // Check if booth ID is valid
-            if (!boothId || isNaN(boothId) || boothId < 1 || boothId > 25) {
-                window.location.href = 'booth-quiz-main-page.html'; // Redirect to main page if invalid
-                return;
-            }
-            
-            // Get booth information
-            const booth = booths.find(b => b.id === boothId);
-            if (!booth) {
-                window.location.href = 'booth-quiz-main-page.html'; // Redirect if booth not found
-                return;
-            }
-            
-            // Set booth name and logo
-            document.getElementById('booth-name').textContent = booth.name;
-            const logoElement = document.getElementById('booth-logo');
-            logoElement.src = booth.logo;
-            logoElement.alt = booth.name + ' logo';
-            
-            // Check if this booth is already completed
-            if (completedBooths.includes(boothId)) {
-                document.getElementById('question-section').style.display = 'none';
-                document.getElementById('completed-section').style.display = 'block';
-                logoElement.classList.add('completed');
-            } else {
-                // Find the question for this booth
-                const question = questions.find(q => q.boothId === boothId);
-                if (!question) {
-                    window.location.href = 'booth-quiz-main-page.html'; // Redirect if question not found
-                    return;
-                }
-                
-                // Set question text
-                document.getElementById('question-text').textContent = question.questionText;
-                
-                // Generate answer buttons
-                const answersContainer = document.getElementById('answers-container');
-                question.options.forEach((option, index) => {
-                    const answerButton = document.createElement('button');
-                    answerButton.className = 'answer-btn';
-                    answerButton.textContent = option.text;
-                    
-                    answerButton.addEventListener('click', () => {
-                        checkAnswer(option.isCorrect, boothId);
-                    });
-                    
-                    answersContainer.appendChild(answerButton);
-                });
-            }
-            
-            // Add event listener for back button
-            document.getElementById('back-btn').addEventListener('click', () => {
-                window.location.href = 'booth-quiz-main-page.html';
-            });
-        }
-        
-        // Function to check answer
-        function checkAnswer(isCorrect, boothId) {
-            if (isCorrect) {
-                // Mark booth as completed
-                if (!completedBooths.includes(boothId)) {
-                    completedBooths.push(boothId);
-                    localStorage.setItem('completedBooths', JSON.stringify(completedBooths));
-                }
-                
-                // Change logo to colored version
-                const logoElement = document.getElementById('booth-logo');
-                logoElement.classList.add('completed');
-                
-                // Show success message
-                
-                    window.location.href = 'booth-quiz-main-page.html';
-               
-            } 
-        }
-        
-        // Initialize the page
-        initPage();
-    </script>
+// แสดงหลายโลโก้
+const logoContainer = document.getElementById('logo-container');
+boothIds.forEach(id => {
+  const booth = booths.find(b => b.id === id);
+  if (!booth) return;
+  const img = document.createElement('img');
+  img.src = booth.logo;
+  img.className = 'logo';
+  logoContainer.appendChild(img);
+});
+
+// บันทึกหลาย booth พร้อมกัน
+document.getElementById('confirm-btn').onclick = () => {
+  let completed = JSON.parse(localStorage.getItem('completedBooths')) || [];
+  boothIds.forEach(id => {
+    if (!completed.includes(id)) completed.push(id);
+  });
+  localStorage.setItem('completedBooths', JSON.stringify(completed));
+  window.location.href = 'booth-quiz-main-page.html';
+};
+</script>
+
 </body>
 </html>
