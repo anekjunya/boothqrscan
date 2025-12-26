@@ -316,7 +316,7 @@
             { id: 4, name: 'G2', logo: 'logo/cmru.png' },
             { id: 5, name: 'G3', logo: 'logo/cmru.png' },
             { id: 6, name: 'G4', logo: 'logo/cmru.png' },
-            { id: 7, name: 'G5,G6', logo: 'logo/cmru.png' },
+            { id: 7, name: 'G5,G6', logo: 'logo/cmru.png', linkedBooths: [7, 8] },
             { id: 8, name: 'G6', logo: 'logo/cmru.png' },
             { id: 9, name: 'G7', logo: 'logo/cmru.png' },
             { id: 10, name: 'G8', logo: 'logo/cmru.png' },
@@ -411,10 +411,15 @@
         function checkAnswer(isCorrect, boothId) {
             if (isCorrect) {
                 // Mark booth as completed
-                if (!completedBooths.includes(boothId)) {
-                    completedBooths.push(boothId);
-                    localStorage.setItem('completedBooths', JSON.stringify(completedBooths));
-                }
+const booth = booths.find(b => b.id === boothId);
+const boothsToComplete = booth.linkedBooths || [boothId];
+
+boothsToComplete.forEach(id => {
+  if (!completedBooths.includes(id)) {
+    completedBooths.push(id);
+  }
+});
+
                 
                 // Change logo to colored version
                 const logoElement = document.getElementById('booth-logo');
